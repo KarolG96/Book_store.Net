@@ -1,9 +1,9 @@
-﻿using Book_store.Data;
-using Book_store.Models;
+﻿using BookStore.DataAcess;
+using BookStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Book_store.Controllers
+namespace BookStore.Controllers
 {
     public class CategoryController : Controller
     {

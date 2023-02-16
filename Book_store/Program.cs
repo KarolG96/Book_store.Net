@@ -1,5 +1,9 @@
-﻿using Book_store.Data;
+﻿using BookStore.DataAcess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
-//builder.Services.AddRazorPages().AddRazorRuntimeCompilation()???
+//builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); Nuget potrzebny
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

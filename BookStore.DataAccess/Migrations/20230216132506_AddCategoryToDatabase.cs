@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Book_store.Migrations
+namespace BookStore.Migrations
 {
     /// <inheritdoc />
     public partial class AddCategoryToDatabase : Migration
