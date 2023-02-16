@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Book_store.Models
@@ -9,6 +9,8 @@ namespace Book_store.Models
 		public int Id { get; set; }
 		[Required]
 		public string Name { get; set; }
+		[DisplayName("Dispaly Order")]
+		[Range(1,100,ErrorMessage="Display Oreder must be between 1 and 100 only!")]
 		public int DisplayOrder { get; set; }
 		public DateTime CreatedDataTime { get; set; } = DateTime.Now;
 
