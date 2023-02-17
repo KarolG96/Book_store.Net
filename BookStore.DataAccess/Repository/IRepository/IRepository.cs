@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.DataAccess.Repository.IRepository
 {
-    internal interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
         //T- Category
         T GetFirstOrDefault(Expression<Func<T, bool>> filter);
