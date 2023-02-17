@@ -1,4 +1,4 @@
-﻿using BookStore.DataAcess;
+﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using BookStore.DataAccess.Repository.IRepository;
 using BookStore.DataAccess.Repository;
+using BookStore.DataAcess;
 
 var builder = WebApplication.CreateBuilder(args);
 
