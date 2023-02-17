@@ -3,6 +3,8 @@ using BookStore.DataAcess;
 using BookStore.Models;
 using BookStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -75,7 +77,7 @@ namespace BookStore.Areas.Admin.Controllers
                 if(file != null)
                 {
                     string fileName = Guid.NewGuid().ToString();
-                    var uploads = Path.Combine(wwwRootPath, @"image\products");
+                    var uploads = Path.Combine(wwwRootPath, @"images\products");
                     var extension = Path.GetExtension(file.FileName);
 
                     if (obj.Product.ImageUrl != null)
