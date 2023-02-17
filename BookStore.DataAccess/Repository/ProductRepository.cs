@@ -33,9 +33,9 @@ namespace BookStore.DataAccess.Repository
                 objFromDb.CategoryId = obj.CategoryId;
                 objFromDb.Author = obj.Author;
                 objFromDb.CoverTypeId = obj.CoverTypeId;
-                if(obj.ImageURL !=null)
+                if(obj.ImageUrl !=null)
                 {
-                    objFromDb.ImageURL = obj.ImageURL;
+                    objFromDb.ImageUrl = obj.ImageUrl;
                 }
 
             }
