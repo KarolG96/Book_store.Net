@@ -54,12 +54,12 @@ public class CompanyController : Controller
             if(obj.Id == 0)
             {
                 _unitOfWork.Company.Add(obj);
-				empData["success"] = "Company created successfully";
+				TempData["success"] = "Company created successfully";
 			}
             else
             {
 					_unitOfWork.Company.Update(obj);
-				empData["success"] = "Company updated successfully";
+				TempData["success"] = "Company updated successfully";
 			}               
             _unitOfWork.Save();
             return RedirectToAction("Index");
