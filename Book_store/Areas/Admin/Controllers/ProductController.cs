@@ -9,38 +9,38 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace BookStore.Areas.Admin.Controllers
+namespace BookStore.Areas.Admin.Controllers;
+[Area("Admin")]
 
+public class ProductController : Controller
 {
-    public class ProductController : Controller
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IWebHostEnvironment _hostEnvironment;
+
+    public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _hostEnvironment;
+        _unitOfWork = unitOfWork;
+        _hostEnvironment = hostEnvironment;
+    }
 
-        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
-        {
-            _unitOfWork = unitOfWork;
-            _hostEnvironment = hostEnvironment;
-        }
-
-        public IActionResult Index()
-        {
-            
-            return View();
-        }
-
+    public IActionResult Index()
+    {
         
-        //GET
-        public IActionResult Upsert(int? id)
+        return View();
+    }
+
+    
+    //GET
+    public IActionResult Upsert(int? id)
+    {
+        ProductVM productVM = new()
         {
-            ProductVM productVM = new()
+            Product = new(),
+            CategoryList = _unitOfWork.Category.GetAll().Select(i=>new SelectListItem
             {
-                Product = new(),
-                CategoryList = _unitOfWork.Category.GetAll().Select(i=>new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.Id.ToString()
-                }),
+                Text = i.Name,
+                Value = i.Id.ToString()
+            }),
 				CoverTypeList = _unitOfWork.CoverType.GetAll().Select(i => new SelectListItem
 				{
 					Text = i.Name,
@@ -50,75 +50,75 @@ namespace BookStore.Areas.Admin.Controllers
 			};
 
 			if (id == null || id == 0)
-            {
-                //creata product
-                // ViewBag.CategoryList = CategoryList;
-                //ViewData["CoverTypeList"] = CoverTypeList;
-                return View(productVM);
-            }
-            else
-            {
-                productVM.Product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id); 
-                return View(productVM);
+        {
+            //creata product
+            // ViewBag.CategoryList = CategoryList;
+            //ViewData["CoverTypeList"] = CoverTypeList;
+            return View(productVM);
+        }
+        else
+        {
+            productVM.Product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id); 
+            return View(productVM);
 
 				//upadte product
 			}
 
-        }
+    }
 
-        //POST
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Upsert(ProductVM obj, IFormFile? file)
+    //POST
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Upsert(ProductVM obj, IFormFile? file)
+    {
+        if (ModelState.IsValid)
         {
-            if (ModelState.IsValid)
+            string wwwRootPath = _hostEnvironment.WebRootPath;
+            if(file != null)
             {
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                if(file != null)
-                {
-                    string fileName = Guid.NewGuid().ToString();
-                    var uploads = Path.Combine(wwwRootPath, @"images\products");
-                    var extension = Path.GetExtension(file.FileName);
+                string fileName = Guid.NewGuid().ToString();
+                var uploads = Path.Combine(wwwRootPath, @"images\products");
+                var extension = Path.GetExtension(file.FileName);
 
-                    if (obj.Product.ImageUrl != null)
+                if (obj.Product.ImageUrl != null)
+                {
+                    var oldImagePath = Path.Combine(wwwRootPath,obj.Product.ImageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
                     {
-                        var oldImagePath = Path.Combine(wwwRootPath,obj.Product.ImageUrl.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
+                        System.IO.File.Delete(oldImagePath);
                     }
-
-                    using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
-                    {
-                        file.CopyTo(fileStreams);
-                    }
-                    obj.Product.ImageUrl = @"\images\products\" + fileName + extension;
-
                 }
-                if(obj.Product.Id == 0)
+
+                using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
                 {
-                    _unitOfWork.Product.Add(obj.Product);
+                    file.CopyTo(fileStreams);
                 }
-                else
-                {
+                obj.Product.ImageUrl = @"\images\products\" + fileName + extension;
+
+            }
+            if(obj.Product.Id == 0)
+            {
+                _unitOfWork.Product.Add(obj.Product);
+            }
+            else
+            {
 					_unitOfWork.Product.Update(obj.Product);
 				}               
-                _unitOfWork.Save();
-                TempData["success"] = "Product created successfully";
-                return RedirectToAction("Index");
-            }
-            return View(obj);
+            _unitOfWork.Save();
+            TempData["success"] = "Product created successfully";
+            return RedirectToAction("Index");
         }
-        
+        return View(obj);
+    }
+    
 
-        #region API CALLS
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var productList = _unitOfWork.Product.GetAll(includeProperties:"Category,CoverType");
-            return Json(new { data=productList });
-        }
+    #region API CALLS
+    [HttpGet]
+    public IActionResult GetAll()
+    {
+        var productList = _unitOfWork.Product.GetAll(includeProperties:"Category,CoverType");
+        return Json(new { data=productList });
+    }
 
 		//POST
 		[HttpDelete]
@@ -127,7 +127,7 @@ namespace BookStore.Areas.Admin.Controllers
 			var obj = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
 			if (obj == null)
 			{
-                return Json(new { success = false, massage = "Error while delting" });
+            return Json(new { success = false, massage = "Error while delting" });
 			}
 
 			var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageUrl.TrimStart('\\'));
@@ -144,4 +144,3 @@ namespace BookStore.Areas.Admin.Controllers
 
 		#endregion
 	}
-}

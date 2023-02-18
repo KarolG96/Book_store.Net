@@ -5,6 +5,7 @@ using BookStore.DataAccess.Repository.IRepository;
 using BookStore.DataAccess.Repository;
 
 namespace BookStore.Areas.Customer.Controllers;
+[Area("Customer")]
 
 public class HomeController : Controller
 {

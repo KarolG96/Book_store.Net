@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Utility
 {
-    internal class SD
+    public class SD
     {
     }
 }
